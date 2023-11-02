@@ -1,12 +1,12 @@
 const { ApolloError, AuthenticationError } = require("apollo-server-express");
-const { User } = require("../../models");
+const { User } = require("../../models/index.js");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 require("dotenv").config();
 
 module.exports = {
   Query: {
-    hello: () => "hi",
+    hello: () => "welcome!",
     users: async (root, args, { user }) => {
       if (!user) throw new Error("You are not authenticated!");
       return await User.find();
