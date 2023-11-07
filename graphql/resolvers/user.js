@@ -18,7 +18,7 @@ module.exports = {
   },
   Mutation: {
     signUp: async (root, args, context, info) => {
-      const { email, name, password } = args;
+      const { email, name, password, role } = args;
       let user = await User.findOne({ email });
 
       if (user) throw new AuthenticationError("User already exist");
@@ -27,12 +27,12 @@ module.exports = {
         email,
         name,
         password: await bcrypt.hash(password, 10),
-        role: "isguest",
+        role,
       });
 
       await user.save();
 
-      return jsonwebtoken.sign(
+      return    jsonwebtoken.sign(
         {
           id: user.id,
           role: user.role,
@@ -40,6 +40,7 @@ module.exports = {
         process.env.JWT_SECRET,
         { expiresIn: "7 days" }
       );
+      
     },
     signIn: async (root, args, context, info) => {
       const { email, password, role } = args;
@@ -51,11 +52,10 @@ module.exports = {
         throw new AuthenticationError(
           "You can't access that role."
         );
-user.ro
       const valid = await bcrypt.compare(password, user.password);
       if (!valid) throw new AuthenticationError("Incorrect password");
 
-      return jsonwebtoken.sign(
+      return token = jsonwebtoken.sign(
         {
           id: user.id,
           role: user.role,
